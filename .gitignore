@@ -7,3 +7,7 @@ backend/venv/
 
 # ML models (large files)
 backend/*.pkl
+# Environment variables
+.env
+frontend/.env
+backend/.env

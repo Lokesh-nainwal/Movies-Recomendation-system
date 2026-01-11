@@ -1,34 +1,17 @@
 import { useState } from "react";
-import { recommendMovie, getMoviePoster } from "./api";
+import { recommendMovie } from "./api";
 
 function App() {
-  // state for input movie name
   const [movie, setMovie] = useState("");
-
-  // list of recommended movies (objects: { title, poster })
   const [list, setList] = useState([]);
-
-  // loading indicator
   const [loading, setLoading] = useState(false);
 
-  // function called when user clicks "Recommend"
   const handleRecommend = async () => {
     if (!movie) return;
 
     setLoading(true);
-
-    // get recommended movie names from backend
     const names = await recommendMovie(movie);
-
-    // for each movie name, fetch poster
-    const moviesWithPosters = await Promise.all(
-      names.map(async (name) => {
-        const poster = await getMoviePoster(name);
-        return { title: name, poster };
-      })
-    );
-
-    setList(moviesWithPosters);
+    setList(names);
     setLoading(false);
   };
 
@@ -47,7 +30,7 @@ function App() {
         🎬 Movie Recommendation System
       </h1>
 
-      {/* ================= SEARCH BAR ================= */}
+      {/* ================= SEARCH ================= */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "30px" }}>
         <input
           value={movie}
@@ -76,10 +59,9 @@ function App() {
         </button>
       </div>
 
-      {/* ================= LOADING TEXT ================= */}
       {loading && <p>Loading recommendations...</p>}
 
-      {/* ================= RECOMMENDED MOVIES GRID ================= */}
+      {/* ================= MOVIES GRID ================= */}
       <div
         style={{
           display: "grid",
@@ -97,7 +79,6 @@ function App() {
               textAlign: "center",
             }}
           >
-            {/* Poster placeholder (image may be blocked by network) */}
             <div
               style={{
                 height: "250px",
@@ -107,19 +88,18 @@ function App() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "14px",
                 color: "#aaa",
               }}
             >
               Poster
             </div>
 
-            <p>{m.title}</p>
+            <p>{m}</p>
           </div>
         ))}
       </div>
 
-      {/* ================= ABOUT / HOW IT WORKS SECTION ================= */}
+      {/* ================= ABOUT SECTION ================= */}
       <div
         style={{
           marginTop: "80px",
@@ -133,12 +113,11 @@ function App() {
         </h2>
 
         <p style={{ color: "#bbb", maxWidth: "900px", lineHeight: "1.7" }}>
-          This project is a content-based movie recommendation system. Instead
-          of using user ratings, it recommends movies by analyzing the content
-          and metadata of films such as genres and descriptions.
+          This is a content-based movie recommendation system that suggests
+          movies similar to the one selected by the user using cosine
+          similarity.
         </p>
 
-        {/* explanation cards */}
         <div
           style={{
             display: "grid",
@@ -150,46 +129,76 @@ function App() {
           <div style={aboutCard}>
             🎭 <b>Content-Based Filtering</b>
             <p style={aboutText}>
-              The system finds movies that are similar in genre and storyline to
-              the selected movie.
+              Recommendations are based on movie genres and descriptions.
             </p>
           </div>
 
           <div style={aboutCard}>
-            📐 <b>Vector Similarity</b>
+            📐 <b>Cosine Similarity</b>
             <p style={aboutText}>
-              Movie data is converted into vectors and compared using cosine
-              similarity.
+              Movies are compared using vector similarity techniques.
             </p>
           </div>
 
           <div style={aboutCard}>
             ⚙️ <b>FastAPI Backend</b>
             <p style={aboutText}>
-              A Python FastAPI backend processes requests and returns
-              recommendations efficiently.
+              The backend handles ML logic and serves recommendations via API.
             </p>
           </div>
 
           <div style={aboutCard}>
             🖥️ <b>React Frontend</b>
             <p style={aboutText}>
-              A modern React frontend provides real-time recommendations with a
-              clean and responsive UI.
+              A responsive UI that communicates with the backend in real time.
             </p>
           </div>
         </div>
       </div>
-      
-    </div>
 
-    
+      {/* ================= FOOTER ================= */}
+      <footer
+        style={{
+          marginTop: "80px",
+          padding: "30px 20px",
+          backgroundColor: "#0a0a0a",
+          textAlign: "center",
+          borderTop: "1px solid #222",
+        }}
+      >
+        <p style={{ color: "#888", marginBottom: "8px" }}>
+          Created by <b style={{ color: "#fff" }}>Lokesh Nainwal</b>
+        </p>
+
+        <p style={{ color: "#888", marginBottom: "8px" }}>
+          📧 Email:{" "}
+          <a
+            href="mailto:yourmail@gmail.com"
+            style={{ color: "#e50914", textDecoration: "none" }}
+          >
+            lokeshnainwal57@gmail.com
+          </a>
+        </p>
+
+        <p>
+          🔗{" "}
+          <a
+            href="https://github.com/Lokesh-nainwal"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "#e50914", textDecoration: "none" }}
+          >
+            GitHub Profile
+          </a>
+        </p>
+
+        <p style={{ color: "#555", fontSize: "12px", marginTop: "15px" }}>
+          © {new Date().getFullYear()} Movie Recommendation System
+        </p>
+      </footer>
+    </div>
   );
 }
-
-/* ================= ABOUT SECTION STYLES ================= */
-
-
 
 const aboutCard = {
   backgroundColor: "#111",
