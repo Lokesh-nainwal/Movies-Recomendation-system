@@ -5,47 +5,57 @@ import os
 import pickle
 import requests
 
-# -------------------- FASTAPI APP --------------------
+# ---------------- FASTAPI SETUP ----------------
 app = FastAPI(title="Movie Recommendation API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow frontend access
+    allow_origins=["*"],  # allow all origins (frontend access)
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# -------------------- LOAD ENV VARIABLES --------------------
+# ---------------- ENVIRONMENT VARIABLES ----------------
 MOVIES_URL = os.getenv("MOVIES_PKL_URL")
 SIMILARITY_URL = os.getenv("SIMILARITY_PKL_URL")
 
 if not MOVIES_URL or not SIMILARITY_URL:
     raise RuntimeError(
-        "Model URLs not found. Set MOVIES_PKL_URL and SIMILARITY_PKL_URL"
+        "Model URLs not found! "
+        "Be sure to set MOVIES_PKL_URL and SIMILARITY_PKL_URL in environment."
     )
 
-# -------------------- DOWNLOAD MODELS IF NOT PRESENT --------------------
-def download_file(url: str, filename: str):
-    if not os.path.exists(filename):
-        print(f"Downloading {filename}...")
-        response = requests.get(url)
+# ---------------- LOCAL PATHS ----------------
+BASE_DIR = os.path.dirname(__file__)
+MOVIES_PATH = os.path.join(BASE_DIR, "movies.pkl")
+SIMILARITY_PATH = os.path.join(BASE_DIR, "similarity.pkl")
+
+# ---------------- DOWNLOAD HELPERS ----------------
+def download_file(url: str, path: str):
+    if not os.path.exists(path):
+        print(f"Downloading {os.path.basename(path)}...")
+        response = requests.get(url, timeout=60)
         response.raise_for_status()
-        with open(filename, "wb") as f:
+        with open(path, "wb") as f:
             f.write(response.content)
-        print(f"{filename} downloaded")
+        print(f"{os.path.basename(path)} saved.")
 
-download_file(MOVIES_URL, "movies.pkl")
-download_file(SIMILARITY_URL, "similarity.pkl")
+# Attempt to download the models if not present
+download_file(MOVIES_URL, MOVIES_PATH)
+download_file(SIMILARITY_URL, SIMILARITY_PATH)
 
-# -------------------- LOAD MODELS --------------------
-movies = pickle.load(open("movies.pkl", "rb"))
-similarity = pickle.load(open("similarity.pkl", "rb"))
+# ---------------- LOAD MODELS ----------------
+with open(MOVIES_PATH, "rb") as f:
+    movies = pickle.load(f)
 
-# -------------------- REQUEST SCHEMA --------------------
+with open(SIMILARITY_PATH, "rb") as f:
+    similarity = pickle.load(f)
+
+# ---------------- REQUEST SCHEMA ----------------
 class MovieRequest(BaseModel):
     movie: str
 
-# -------------------- ROUTES --------------------
+# ---------------- ROUTES ----------------
 @app.get("/")
 def home():
     return {"message": "Movie Recommendation API is running"}
