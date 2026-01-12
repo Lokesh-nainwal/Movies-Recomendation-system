@@ -1,16 +1,16 @@
-# 🎬 Movie Recommendation System
+#  Movie Recommendation System
 
 A Movie Recommendation System built using Machine Learning that recommends movies based on similarity between movie content. This project uses content-based filtering techniques to provide personalized movie suggestions.
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 This project recommends movies to users by analyzing movie features such as genres, overview, keywords, cast, and crew. Instead of relying on user ratings, the system focuses on **movie-to-movie similarity**, making it efficient and suitable even when user data is limited.
 
 ---
 
-## 🚀 Features
+##   Features
 
 - Content-based movie recommendations
 - Uses text-based similarity for accurate results
@@ -21,7 +21,7 @@ This project recommends movies to users by analyzing movie features such as genr
 
 ---
 
-## 🧠 Recommendation Technique
+##  Recommendation Technique
 
 ### Content-Based Filtering
 
@@ -37,7 +37,7 @@ This project recommends movies to users by analyzing movie features such as genr
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Language:** Python  
 - **Libraries:**
@@ -51,7 +51,7 @@ This project recommends movies to users by analyzing movie features such as genr
 
 ---
 
-## ⚙️ Workflow
+##  Workflow
 
 1. Load the movie dataset
 2. Clean and preprocess data
@@ -62,9 +62,9 @@ This project recommends movies to users by analyzing movie features such as genr
 
 ---
 
-## ▶️ Installation & Execution
 
-### Step 1: Clone the repository
+
+###  Clone the repository
 ```bash
 git clone https://github.com/Lokesh_Nainwal/Movie-Recommendation-System.git
 
